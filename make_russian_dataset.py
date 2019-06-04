@@ -94,7 +94,6 @@ def make_catcode_file(idx_dict):
         idx = i
         parents = []
         while idx != 1: #recursively get parents
-            idx = str(idx)
             p_idx = add_parent(idx)
             parents.append(p_idx)
             idx = p_idx
@@ -120,19 +119,21 @@ def delete_repititions(file_name): #in wordnet some words in synset repeat, whic
 
 def create_word_sense_children_file(i2w, child_dict, idx_dict, parent_dict):
     word_sense_children_file = open("children.dat", "w")
-    child_dict["*root*"] = [] #add root for the correct format
-    i2w[1] = "*root*"
+    child_dict["*root*"] = []  # add root for the correct format
     for i in idx_dict:
-        if i not in parent_dict: #word has no parent
-            if i2w[i] not in child_dict["*root*"]: #and not in the children of root yet
-                child_dict["*root*"].append(i2w[i]) #add it to the children of root
-    idx_dict[1] = '*root*'
+        if i not in parent_dict:  # word has no parent
+            if i2w[i] not in child_dict["*root*"]:  # and not in the children of root yet
+                child_dict["*root*"].append(i2w[i])  # add it to the children of root
+    word_sense_children_file.write("*root*")
+    for c in child_dict["*root*"]:
+        word_sense_children_file.write(" " + c)
+    word_sense_children_file.write("\n")
     for i in idx_dict:
         word = i2w[i]
         word_sense_children_file.write(word)
         for c in child_dict[word]:
             word_sense_children_file.write(" " + c)
-        word_sense_children_file.write("\n") #write children of word in one line
+        word_sense_children_file.write("\n")  # write children of word in one line
     word_sense_children_file.close()
 
 if __name__ == "__main__":
